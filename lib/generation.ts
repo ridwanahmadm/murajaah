@@ -27,6 +27,7 @@ export const aiDraftSchema = z.object({
 }).strict();
 export type GenerationInput = z.infer<typeof generationInputSchema>;
 export type AIDraft = z.infer<typeof aiDraftSchema>;
+export const replySchema=z.object({data:aiDraftSchema,grounded:z.boolean()});
 export const draftSchema = z.object({
   id: z.string().min(1), subjectId: z.string(), subject: z.string().trim().min(1).max(120), topic: z.string().trim().min(1).max(160),
   grounded: z.boolean(), data: aiDraftSchema, createdAt: z.number(),
@@ -43,10 +44,16 @@ export function validateDraft(value: unknown): AIDraft {
   for (const item of [...data.lessons, ...data.questions]) if (item.sourceRef.url) httpUrl.parse(item.sourceRef.url);
   return data;
 }
+export function requireParaphrase(data:AIDraft,source:string){
+ if(!source)return;const normalizedSource=source.normalize('NFC');
+ const prose=[...data.lessons.flatMap(l=>[l.title,l.explanation,...l.rules.flatMap(r=>[r.name,r.description]),...l.examples.flatMap(e=>[e.transliteration,e.meaning,e.note])]),...data.questions.flatMap(q=>[q.prompt,q.explanation,...q.options])];
+ for(const text of prose){const normalized=text.normalize('NFC');for(let i=0;i+180<=normalized.length;i+=20)if(normalizedSource.includes(normalized.slice(i,i+180)))throw new Error('Draf menyalin bagian sumber terlalu panjang. Parafrase diperlukan.');}
+}
 export function groundDraft(value: unknown, input: GenerationInput, sourceUrls: string[]): AIDraft {
   const data = validateDraft(value);
   const grounded = !!(input.suppliedText || input.photos.length);
   const supplied = input.suppliedText.normalize('NFC');
+  requireParaphrase(data,supplied);
   for (const lesson of data.lessons) {
     for (const example of lesson.examples) {
       // Never trust model-produced verse text or OCR as a verified Quran provider.
@@ -56,7 +63,9 @@ export function groundDraft(value: unknown, input: GenerationInput, sourceUrls: 
   for (const item of [...data.lessons, ...data.questions]) {
     const prose = 'rules' in item ? [item.title, item.explanation, ...item.rules.flatMap(r=>[r.name,r.description]), ...item.examples.flatMap(e=>[e.transliteration,e.meaning,e.note])] : [item.prompt, item.explanation, ...item.options];
     // Prose and prompts stay Indonesian; Arabic is isolated in pasted example fields.
+
     if(prose.some(s=>hasArabic.test(s))) throw new Error('Teks Arab hanya boleh berada pada contoh yang ditempel pengguna.');
+    if(hasArabic.test(item.evidence)&&!supplied.includes(item.evidence.normalize('NFC')))throw new Error('Bukti Arab harus berasal dari teks yang ditempel pengguna.');
     if (grounded) {
       if (!item.evidence.trim()) throw new Error('Bukti sumber materi belum tersedia.');
       if (input.suppliedText && !input.photos.length && !supplied.includes(item.evidence.normalize('NFC'))) throw new Error('Bukti tidak ditemukan dalam teks yang Anda berikan.');
@@ -64,7 +73,6 @@ export function groundDraft(value: unknown, input: GenerationInput, sourceUrls: 
     } else {
       if (!item.sourceRef.url || !sourceUrls.includes(item.sourceRef.url)) throw new Error('Rujukan umum harus memakai URL yang ditemukan dalam pencarian.');
       item.sourceRef = { title: `Rujukan umum — ${item.sourceRef.title}`, locator: '', url: item.sourceRef.url };
-      item.evidence = '';
     }
   }
   return data;

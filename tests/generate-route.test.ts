@@ -1,7 +1,7 @@
 import {beforeEach,afterEach,describe,it,expect,vi} from 'vitest';
 import {input,fixture} from './fixtures/draft';
 const generate=vi.hoisted(()=>vi.fn());
-vi.mock('../lib/ai/provider',()=>({createProvider:()=>({generate})}));
+vi.mock('../lib/ai/provider',async()=>({...await vi.importActual<typeof import('../lib/ai/provider')>('../lib/ai/provider'),createProvider:()=>({generate})}));
 import {POST} from '../app/api/generate/route';
 function request(body:unknown=input,code='test-access-code-long-enough'){return new Request('http://localhost/api/generate',{method:'POST',headers:{'content-type':'application/json','x-access-code':code},body:JSON.stringify(body)});}
 beforeEach(()=>{vi.stubEnv('APP_ACCESS_CODE','test-access-code-long-enough');generate.mockResolvedValue(fixture());});

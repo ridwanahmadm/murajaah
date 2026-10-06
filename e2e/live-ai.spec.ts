@@ -1,0 +1,13 @@
+import {test,expect} from '@playwright/test';
+import {readFile} from 'node:fs/promises';
+import {replySchema} from '../lib/generation';
+test('real free local AI creates grounded text and photo drafts',async({page},testInfo)=>{
+ test.skip(process.env.MURAJAAH_LIVE_AI!=='1'||testInfo.project.name!=='desktop','Opt-in local AI verification only.');test.setTimeout(600000);
+ const env=await readFile('.env.local','utf8');const code=env.split('\n').find(line=>line.startsWith('APP_ACCESS_CODE='))?.split('=').slice(1).join('=');expect(code).toBeTruthy();
+ const source='Mad berarti memanjangkan bacaan. Mad asli disebut juga mad thabii. Mad asli dibaca dua harakat. Huruf mad adalah alif, waw, dan ya dengan syarat tertentu. Belajar panjang bacaan perlu latihan bersama guru. Catatan ini adalah teks latihan buatan untuk pengujian, bukan kutipan buku.';
+ const body={subject:'Tahsin',topic:'Mad asli',reference:'Catatan latihan pengujian',locator:'',suppliedText:source,photos:[] as string[]};
+ const first=await page.request.post('/api/generate',{headers:{'x-access-code':code!},data:body,timeout:360000});expect(first.status(),await first.text()).toBe(200);const textDraft=replySchema.parse(await first.json());expect(textDraft.grounded).toBe(true);expect(textDraft.data.lessons[0].sourceRef.title).toBe(body.reference);
+ await page.goto('/tambah');const photo=await page.evaluate(text=>{const canvas=document.createElement('canvas');canvas.width=1400;canvas.height=600;const context=canvas.getContext('2d')!;context.fillStyle='white';context.fillRect(0,0,1400,600);context.fillStyle='black';context.font='32px sans-serif';text.match(/.{1,65}(\s|$)/g)?.forEach((line,index)=>context.fillText(line.trim(),40,70+index*52));return canvas.toDataURL('image/jpeg',.9);},source);
+ const second=await page.request.post('/api/generate',{headers:{'x-access-code':code!},data:{...body,suppliedText:'',photos:[photo]},timeout:360000});expect(second.status(),await second.text()).toBe(200);const photoDraft=replySchema.parse(await second.json());expect(photoDraft.grounded).toBe(true);expect(photoDraft.data.lessons[0].examples).toEqual([]);
+ const third=await page.request.post('/api/generate',{headers:{'x-access-code':code!},data:{...body,subject:'Islam',topic:'Tajwid',reference:'Praktis Tadjwid Metode As-Syafiiyah',suppliedText:'',photos:[]},timeout:360000});expect(third.status(),await third.text()).toBe(200);const general=replySchema.parse(await third.json());expect(general.grounded).toBe(false);general.data.lessons.forEach(l=>{expect(l.sourceRef.title).toContain('Rujukan umum');expect(l.evidence.length).toBeGreaterThan(0);expect(l.sourceRef.url).toMatch(/^https:\/\/(id|en)\.wikipedia\.org\//);});
+});
