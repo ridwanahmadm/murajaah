@@ -1,6 +1,6 @@
 # Murajaah public publication
 
-Live URL: https://murajaah-ridwan.ridwan-22693.chatgpt.site
+Live URL: https://belajartahsin.ridwan-22693.chatgpt.site
 Audience: public. Native Sites deployment returned `succeeded`.
 
 - Site: `appgprj_6ac5836915bc8191a2c1df422bb66a59`
@@ -18,3 +18,5 @@ Existing localhost records are independent of this public origin: export JSON fr
 Public material creation is manual and free of AI API calls; local Next continues to use free Ollama only. Public output bundles the supplied Quran font and source PDF, with attribution retained in the lessons.
 
 Validation: 59 unit tests, 28 local browser cases, 6 public browser cases, 24 contrast checks, lint/typecheck, public static build and local Next webpack production build passed. Two optional live Ollama browser cases were skipped. Native successful deployment status verifies publication; no agent fetch of the production URL was used.
+
+Public URL label changed to `belajartahsin` on 7 October 2026. Native slug change returned `complete` and the new live URL; the existing project, saved version and public audience are retained. Because browser data is scoped to its origin, JSON export/import is required to carry personal records between the previous address and this address.
