@@ -1,0 +1,28 @@
+import {test,expect} from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+import {groundDraft} from '../lib/generation';
+import {fixture,input} from '../tests/fixtures/draft';
+test('generate, save, resume, edit, approve and publish to new subject',async({page})=>{
+ const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('/pengaturan');await page.getByLabel('Kode akses',{exact:true}).fill('test-access-code-long-enough');await page.getByRole('button',{name:'Simpan pengaturan'}).click();await expect(page.getByRole('status')).toContainText('Pengaturan tersimpan');
+ await page.route('**/api/generate',async route=>{const sent=route.request().postDataJSON();expect(sent.topic).toBe('Mad dasar');expect(route.request().headers()['x-access-code']).toBe('test-access-code-long-enough');await route.fulfill({json:{data:groundDraft(fixture(),input,[]),grounded:true}});});
+ await page.getByRole('link',{name:'Tambah',exact:true}).click();await page.getByRole('combobox',{name:'Subjek',exact:true}).selectOption('');await page.getByLabel('Nama subjek baru').fill('Tahsin lanjutan');await page.getByLabel('Topik',{exact:true}).fill('Mad dasar');await page.getByLabel('Referensi',{exact:true}).fill(input.reference);await page.getByLabel('Teks sumber (opsional)').fill(input.suppliedText);
+ await page.getByRole('button',{name:'Buat draf'}).click();await expect(page.getByRole('heading',{name:'Tinjau draf',exact:true})).toBeVisible();
+ expect((await new AxeBuilder({page}).analyze()).violations).toEqual([]);
+ await page.getByLabel('Judul pelajaran',{exact:true}).fill('Mad untuk ditinjau');await page.getByRole('button',{name:'Simpan draf',exact:true}).click();await expect(page.getByRole('status')).toContainText('Perubahan draf tersimpan');
+ await page.reload();await page.getByRole('button',{name:'Mad dasar · Tahsin lanjutan'}).click();await expect(page.getByLabel('Judul pelajaran',{exact:true})).toHaveValue('Mad untuk ditinjau');
+ await expect(page.getByRole('button',{name:'Terbitkan ke perpustakaan'})).toBeDisabled();await page.getByLabel('Saya sudah meninjau pelajaran, rujukan, dan semua jawaban kuis.').check();await page.getByRole('button',{name:'Terbitkan ke perpustakaan'}).click();await page.getByRole('link',{name:'Baca materi yang diterbitkan'}).click();
+ await expect(page.getByRole('heading',{name:'Mad untuk ditinjau',exact:true})).toBeVisible();await expect(page.locator('.badge')).toHaveText('Draf');await expect(page.locator('.eyebrow')).toContainText('Tahsin lanjutan');expect((await new AxeBuilder({page}).analyze()).violations).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);expect(errors).toEqual([]);
+});
+test('verified-only setting hides drafts and empty quiz explains why',async({page})=>{
+ await page.goto('/pengaturan');await page.getByLabel('Hanya materi terverifikasi').check();await page.getByRole('button',{name:'Simpan pengaturan'}).click();await expect(page.getByRole('status')).toContainText('Pengaturan tersimpan');await page.getByRole('link',{name:'Materi',exact:true}).click();await expect(page.getByRole('link',{name:/Hukum Nun Sukun & Tanwin/})).toHaveCount(0);await page.getByRole('link',{name:'Kuis',exact:true}).click();await expect(page.getByRole('button',{name:'Mulai kuis'})).toBeDisabled();await expect(page.getByText('Belum ada soal untuk pilihan ini.',{exact:false})).toBeVisible();
+});
+
+test('photo input downscales and previews before sending; failed AI response does not publish',async({page})=>{
+ await page.goto('/pengaturan');await page.getByLabel('Kode akses',{exact:true}).fill('test-access-code-long-enough');await page.getByRole('button',{name:'Simpan pengaturan'}).click();await expect(page.getByRole('status')).toContainText('Pengaturan tersimpan');await page.getByRole('link',{name:'Tambah',exact:true}).click();
+ await page.getByLabel('Topik',{exact:true}).fill('Mad dasar');await page.getByLabel('Referensi',{exact:true}).fill('Foto buku');
+ await page.getByLabel('Foto halaman (opsional, maksimal 4)').setInputFiles({name:'page.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAAXklEQVR4nO3PMQ0AMAzAsPInvYLYYVWKESTzjhsd8KsBrQGtAa0BrQGtAa0BrQGtAa0BrQGtAa0BrQGtAa0BrQGtAa0BrQGtAa0BrQGtAa0BrQGtAa0BrQGtAa0BbQHKU9LC7/CP1AAAAABJRU5ErkJggg==','base64')});
+ await expect(page.getByRole('img',{name:'Pratinjau halaman 1: page.png'})).toBeVisible();
+ await page.route('**/api/generate',async route=>{const data=route.request().postDataJSON();expect(data.photos).toHaveLength(1);expect(data.photos[0]).toMatch(/^data:image\/jpeg;base64,/);expect(data.photos[0].length).toBeLessThan(750000);await route.fulfill({status:502,json:{error:'Draf belum dapat dibuat dari foto ini.'}});});
+ await page.getByRole('button',{name:'Buat draf'}).click();await expect(page.getByRole('status')).toContainText('Draf belum dapat dibuat dari foto ini.');await expect(page.getByRole('heading',{name:'Tinjau draf'})).toHaveCount(0);await page.getByRole('button',{name:'Hapus foto 1'}).click();await expect(page.getByRole('img',{name:'Pratinjau halaman 1: page.png'})).toHaveCount(0);
+});
