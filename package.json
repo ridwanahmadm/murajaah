@@ -17,7 +17,8 @@
     "check:contrast": "node scripts/contrast.mjs",
     "verify": "npm run lint && npm run typecheck && npm test && npm run check:contrast && npm run build",
     "setup:local": "node scripts/setup-local.mjs",
-    "ai:serve": "node scripts/serve-ai.mjs"
+    "ai:serve": "node scripts/serve-ai.mjs",
+    "build:public": "node scripts/build-public.mjs"
   },
   "keywords": [],
   "author": "",
@@ -48,7 +49,8 @@
     "fake-indexeddb": "^6.2.5",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "vitest": "^5.0.3"
+    "vitest": "^5.0.3",
+    "vite": "^8.3.3"
   },
   "type": "module"
 }

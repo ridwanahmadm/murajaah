@@ -85,3 +85,17 @@ Root AGENTS.md dan sources/ adalah file sinkronisasi read-only dan tidak diubah.
 - `npm audit`: dependency produksi maupun alat pengembangan. Rantai lint rentan sebelumnya sudah diganti dengan plugin TypeScript/hooks/aksesibilitas yang kompatibel.
 
 Batas verifikasi: tes otomatis tidak membuktikan kesempurnaan, seluruh kombinasi browser/perangkat, atau kebenaran agama. Materi tetap perlu peninjauan sumber/guru. Bukti dan hasil pemeriksaan akhir dicatat di VALIDATION.md.
+
+## Versi publik dan penyimpanan perangkat
+
+Versi publik menggunakan komponen dan database lokal yang sama, dikemas sebagai aplikasi statis melalui `npm run build:public`. Keluaran berada di `dist-public/`; `node scripts/preview-public.mjs` menyajikan pratinjau di port 4173. Navigasi memakai hash (`/#/materi/...`) supaya tautan materi buatan pengguna tetap dapat dibuka dan dimuat ulang pada hosting statis.
+
+Manifest pemasangan, ikon, dan service worker menyimpan halaman aplikasi, font, serta PDF sumber. Setelah status **Salinan offline siap**, materi dan kuis bisa dibuka tanpa internet. Tombol **Pertahankan penyimpanan** meminta perlindungan penyimpanan browser bila didukung; menu browser menyediakan pemasangan ke perangkat. IndexedDB tetap menyimpan data pribadi per browser dan per alamat situs. Menghapus penyimpanan browser menghapus materi pribadi dan progres, sehingga cadangan JSON tetap diperlukan.
+
+Versi publik tidak menjalankan server AI dan tidak memanggil API berbayar. Tambah materi manual menghasilkan draf lokal untuk ditinjau, diedit, serta dilengkapi soal sebelum penerbitan. Materi manual diberi asal `manual`; verifikasi tetap memerlukan persetujuan pengguna. Aplikasi Next lokal tetap mendukung Ollama gratis.
+
+Data localhost tidak otomatis berpindah ke alamat publik: gunakan **Pengaturan → Ekspor JSON** di localhost, lalu **Impor cadangan JSON** pada situs publik. Setiap pengunjung mendapat perpustakaan lokal sendiri; perubahan seorang pengguna tidak mengubah materi pengguna lain.
+
+Checkout publik yang terpisah berada di `public-site/`, dengan identitas Sites di `public-site/.openai/hosting.json`. Gunakan kembali `project_id` yang tercatat di sana, jangan mendaftarkan situs pengganti. Build memperbarui checkout tersebut dari daftar folder sumber yang ditentukan; `.env.local`, `.local-ai`, `sources`, AGENTS.md, dan data browser tidak disalin. Publikasi memakai paket statis `public-site/dist/`, tanpa database server atau layanan AI cloud.
+
+Pemeriksaan versi publik: `PLAYWRIGHT_BROWSERS_PATH=/private/tmp/murajaah-browsers npx playwright test --config playwright.public.config.ts`.

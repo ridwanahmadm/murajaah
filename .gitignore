@@ -8,3 +8,6 @@ test-results/
 playwright-report/
 /.local-ai/
 /verification/
+
+/dist-public/
+/public-site/

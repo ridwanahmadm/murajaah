@@ -9,8 +9,8 @@ export async function publishDraft(value:Draft,verified:boolean){
  const lessonIds=data.lessons.map((_,index)=>`lesson-${draft.id}-${index}`);
  const status=verified?'verified' as const:'draft' as const;
  // Provenance is explicit; AI never writes IDs, origin or verification status.
- const lessons=data.lessons.map((l,index)=>lessonSchema.parse({id:lessonIds[index],topicId,title:l.title,explanation:l.explanation,rules:l.rules,examples:l.examples,origin:'ai',status,sourceRef:{...l.sourceRef,url:l.sourceRef.url||undefined}}));
- const questions=data.questions.map((q,index)=>questionSchema.parse({id:`question-${draft.id}-${index}`,lessonId:lessonIds[q.lessonIndex],type:q.type,prompt:q.prompt,options:q.options,correctIndex:q.correctIndex,explanation:q.explanation,origin:'ai',status,sourceRef:{...q.sourceRef,url:q.sourceRef.url||undefined}}));
+ const lessons=data.lessons.map((l,index)=>lessonSchema.parse({id:lessonIds[index],topicId,title:l.title,explanation:l.explanation,rules:l.rules,examples:l.examples,origin:draft.origin??'ai',status,sourceRef:{...l.sourceRef,url:l.sourceRef.url||undefined}}));
+ const questions=data.questions.map((q,index)=>questionSchema.parse({id:`question-${draft.id}-${index}`,lessonId:lessonIds[q.lessonIndex],type:q.type,prompt:q.prompt,options:q.options,correctIndex:q.correctIndex,explanation:q.explanation,origin:draft.origin??'ai',status,sourceRef:{...q.sourceRef,url:q.sourceRef.url||undefined}}));
  await db.transaction('rw',[db.subjects,db.topics,db.lessons,db.questions,db.meta],async()=>{
   if(await db.topics.get(topicId))throw new Error('Draf ini sudah diterbitkan.');
   if(draft.subjectId){if(!await db.subjects.get(subjectId))throw new Error('Subjek tidak ditemukan.');}

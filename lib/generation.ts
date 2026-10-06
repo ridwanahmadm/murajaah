@@ -30,7 +30,7 @@ export type AIDraft = z.infer<typeof aiDraftSchema>;
 export const replySchema=z.object({data:aiDraftSchema,grounded:z.boolean()});
 export const draftSchema = z.object({
   id: z.string().min(1), subjectId: z.string(), subject: z.string().trim().min(1).max(120), topic: z.string().trim().min(1).max(160),
-  grounded: z.boolean(), data: aiDraftSchema, createdAt: z.number(),
+  grounded: z.boolean(), origin:z.enum(['ai','manual']).optional(), data: aiDraftSchema, createdAt: z.number(),
 });
 export type Draft = z.infer<typeof draftSchema>;
 const hasArabic = /[\u0600-\u06ff\u0750-\u077f\u08a0-\u08ff\ufb50-\ufdff\ufe70-\ufeff]/;
