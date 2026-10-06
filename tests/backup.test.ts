@@ -1,8 +1,9 @@
 import 'fake-indexeddb/auto';
+import {installLegacyFixture} from './fixtures/legacy-library';
 import {beforeEach,afterEach,describe,it,expect} from 'vitest';
 import {db,initialize} from '../lib/db';
 import {exportBackup,importBackup,validateBackup} from '../lib/backup';
-beforeEach(async()=>{await db.open();await initialize();});afterEach(async()=>{await db.delete();});
+beforeEach(async()=>{await db.open();await initialize();await installLegacyFixture();});afterEach(async()=>{await db.delete();});
 describe('JSON backup',()=>{
  it('round trips lessons, questions, attempts and settings without secrets',async()=>{
   await db.attempts.add({id:'attempt',questionId:'q-0',correct:false,answeredAt:1,box:0});await db.readings.add({lessonId:'nun',completedAt:1});await db.meta.put({key:'verified-only',value:'true'});await db.meta.put({key:'access-code',value:'private'});

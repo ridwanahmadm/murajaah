@@ -10,8 +10,8 @@ import {listDrafts,publishDraft,saveDraft} from '@/lib/drafts';
 import {downscalePhoto} from '@/lib/photos';
 export default function Add(){
  const {subjects,loading,error,refresh}=useLibrary();
- const [subjectId,setSubjectId]=useState('tahsin');const [subject,setSubject]=useState('');const [topic,setTopic]=useState('');const [reference,setReference]=useState('');const [locator,setLocator]=useState('');const [text,setText]=useState('');const [photos,setPhotos]=useState<{name:string;data:string}[]>([]);
- const effectiveSubjectId=subjects.some(s=>s.id===subjectId)?subjectId:'';
+ const [subjectId,setSubjectId]=useState('tuhfatul-athfal');const [subject,setSubject]=useState('');const [topic,setTopic]=useState('');const [reference,setReference]=useState('');const [locator,setLocator]=useState('');const [text,setText]=useState('');const [photos,setPhotos]=useState<{name:string;data:string}[]>([]);
+ const effectiveSubjectId=subjects.some(s=>s.id===subjectId)?subjectId:subjectId?subjects[0]?.id??'':'';
  const [draft,setDraft]=useState<Draft|null>(null);const [saved,setSaved]=useState<Draft[]>([]);const [dirty,setDirty]=useState(false);const [busy,setBusy]=useState(false);const [processing,setProcessing]=useState(false);const [message,setMessage]=useState('');const [published,setPublished]=useState('');const guard=useRef(false);const heading=useRef<HTMLHeadingElement>(null);
  useEffect(()=>{if(loading||error)return;listDrafts().then(setSaved).catch(()=>setMessage('Draf tersimpan belum dapat dibaca.'));},[loading,error]);
  useEffect(()=>{

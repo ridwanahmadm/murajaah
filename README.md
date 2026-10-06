@@ -19,7 +19,7 @@ Next.js dapat dideploy ke Vercel, tetapi server Vercel tidak dapat mengakses Oll
 
 ## Belajar dan kuis
 
-Beranda → Materi → pelajaran. Tandai sudah dibaca untuk menyimpan kemajuan. Kuis menyediakan pilihan subjek/topik dan 5/10/20 soal; jika persediaan kurang, jumlah sesungguhnya ditampilkan sebelum mulai. Opsi diacak dengan indeks jawaban tetap benar; tidak ada soal berulang dalam satu sesi. Soal belum pernah dilihat berbobot 6, jawaban terakhir salah 8, dan jawaban benar 1/box. Box 0–5: salah kembali ke 0, benar naik satu tingkat. Ini heuristik belajar sederhana.
+Beranda → kartu koleksi → pelajaran. Menu Materi memakai kartu seperti beranda; klik kartu untuk melihat koleksi itu saja. Halaman pelajaran menyediakan Materi sebelumnya/selanjutnya dalam koleksi yang sama, sesuai urutan topik dan filter. Tombol Tandai sudah dibaca berubah menjadi Tandai belum dibaca; kedua keadaan tersimpan setelah reload. Kuis menyediakan pilihan subjek/topik dan 5/10/20 soal; jika persediaan kurang, jumlah sesungguhnya ditampilkan sebelum mulai. Opsi diacak dengan indeks jawaban tetap benar; tidak ada soal berulang dalam satu sesi. Soal belum pernah dilihat berbobot 6, jawaban terakhir salah 8, dan jawaban benar 1/box. Box 0–5: salah kembali ke 0, benar naik satu tingkat. Ini heuristik belajar sederhana.
 
 Jawaban tersimpan per soal. Hasil memuat penjelasan, tautan materi, serta Ulangi yang salah. Tautan materi saat kuis membuka tab baru agar sesi tetap terbuka. Sesi yang belum selesai tidak dipulihkan setelah reload; jawaban yang sudah tersimpan tetap ada. Filter Hanya materi terverifikasi berlaku pada materi dan kuis; default mati.
 
@@ -33,7 +33,7 @@ AI dilarang menghasilkan ayat Al-Quran atau transliterasi ayat dari ingatan. Ara
 
 Draf disimpan terpisah dan belum muncul sebagai pelajaran. Edit judul, penjelasan, ringkasan, contoh, locator, soal, relasi pelajaran, opsi, kunci jawaban, serta penjelasan jawaban. Simpan perubahan secara eksplisit. Peringatan diberikan saat reload atau meninggalkan draf dengan perubahan belum disimpan. Setelah semua isi ditinjau, centang persetujuan untuk menerbitkan. Status tetap Draf kecuali Anda secara terpisah menyatakan telah memverifikasinya dengan sumber atau guru. Asal AI tetap tercatat. Penerbitan atomik mencegah data separuh tersimpan dan penerbitan ganda; tidak menimpa subjek lama.
 
-Materi awal Tahsin: tujuh kerangka topik, dua pelajaran, sepuluh soal. Semuanya Draf, locator kosong, dan rujukan umum. Judul “Praktis Tadjwid Metode As-Syafi’iyah” adalah referensi yang diminta pengguna, bukan atribusi isi/bab buku. Contoh Arab awal adalah diagram huruf, bukan ayat.
+Koleksi awal Tahsin telah dihapus atas permintaan pengguna. Migrasi sekali `migration:remove-tahsin-v1` menghapus seluruh koleksi lama beserta topik, pelajaran, soal, draf terkait, reading dan attempts; koleksi lainnya tetap tersimpan. Instalasi baru hanya memuat Tuhfatul Athfal. Data Tahsin historis hanya dipakai sebagai fixture regresi, bukan dipasang oleh aplikasi. Impor cadangan tetap merupakan pemulihan eksplisit snapshot pengguna.
 
 ## Materi Tuhfatul Athfal dan pengelolaan pelajaran
 
@@ -46,6 +46,16 @@ Buka pelajaran → **Edit materi** untuk menyunting judul, penjelasan, kaidah, c
 **Hapus materi** menampilkan konfirmasi: pelajaran, soal terkait, riwayat jawaban dan kemajuan membacanya dihapus bersama dalam satu transaksi. Batal tidak mengubah data. Materi lain tetap tersimpan. Kuis yang masih terbuka di tab lain menolak menyimpan jawaban untuk soal yang sudah diubah/dihapus. Tautan pelajaran langsung tetap dapat dipakai untuk mengedit draf walaupun filter daftar terverifikasi aktif.
 
 Font Arab memakai OTF persis dari lampiran, dibundel via next/font/local di `public/fonts/kfgqpc-uthmanic-hafs.otf`, tanpa CDN. PDF dan font dipakai pada aplikasi pribadi ini; berkas asli di Downloads tidak diubah.
+
+## Progres, kuis baru, dan hapus koleksi
+
+Reset progres koleksi tersedia di halaman koleksi dan detail pelajaran. Reset semua progres tersedia di beranda dan Pengaturan. Keduanya menampilkan konfirmasi dan hanya menghapus tanda sudah dibaca serta riwayat jawaban; materi, soal dan draf tetap ada.
+
+Setelah hasil kuis, **Buat kuis baru** membuat sesi baru dalam pilihan subjek/topik/jumlah yang sama. Pemilihan mengutamakan ID soal di luar sesi sebelumnya. Jika soal tersisa kurang, sebagian boleh dipakai kembali tanpa pengulangan dalam satu sesi; urutan sesi dan opsi jawaban diacak ulang, dengan perubahan urutan opsi dijamin pada soal yang dipakai kembali. Indeks jawaban tetap tepat. Riwayat belajar tetap disimpan. Ini pengacakan bank soal sumber yang sudah ada, tidak memanggil AI atau API berbayar dan tidak menjanjikan bank soal tanpa batas.
+
+Hapus koleksi tersedia pada kartu menu Materi dan halaman koleksi. Pelajaran bisa dipilih dengan checkbox, termasuk Pilih semua yang ditampilkan, lalu Hapus pelajaran terpilih. Dialog menunjukkan jumlah topik, pelajaran, soal, riwayat jawaban, tanda baca dan draf yang terdampak. Pengguna harus mengetik **HAPUS** persis. Ringkasan dibandingkan lagi dalam transaksi; data yang berubah di tab lain menyebabkan penghapusan ditolak sampai ringkasan diperiksa ulang. Penghapusan parent membersihkan seluruh graph dan draf terkait, tanpa memengaruhi koleksi lain; checkbox pelajaran hanya menghapus pelajaran terpilih dan turunannya. Marker sumber mencegah konten terhapus muncul kembali.
+
+Beranda menampilkan jam setiap detik serta tanggal Masehi dan Hijriah menurut zona waktu perangkat. Hijriah memakai kalender perhitungan `islamic-civil`, dilabeli sebagai perhitungan, bukan penetapan rukyat setempat. Format menggunakan [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat) bawaan browser, tanpa API kalender, akun, atau biaya. Nilai waktu tidak diumumkan setiap detik kepada screen reader.
 
 ## Cadangan JSON
 

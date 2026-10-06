@@ -1,0 +1,12 @@
+"use client";
+import {useRef,useState} from 'react';
+import {confirmDeletion,previewDeletion,type DeletionScope,type DeletionPreview} from '@/lib/collections';
+import {useLibrary} from './library-provider';
+type Props={scope:DeletionScope;label:string;disabled?:boolean;onDeleted?:()=>void};
+export function DeletionControls({scope,label,disabled,onDeleted}:Props){
+ const {refresh}=useLibrary();const dialog=useRef<HTMLDialogElement>(null);
+ const [preview,setPreview]=useState<DeletionPreview|null>(null),[confirmation,setConfirmation]=useState(''),[busy,setBusy]=useState(false),[error,setError]=useState('');
+ async function open(){setBusy(true);setError('');try{const next=await previewDeletion(scope);setPreview(next);setConfirmation('');dialog.current?.showModal();}catch(e){setError(e instanceof Error?e.message:'Ringkasan belum dapat dibaca.');}finally{setBusy(false);}}
+ async function remove(){if(!preview||busy)return;setBusy(true);setError('');try{await confirmDeletion(preview,confirmation);dialog.current?.close();await refresh();onDeleted?.();}catch(e){setError(e instanceof Error?e.message:'Data belum dapat dihapus.');}finally{setBusy(false);}}
+ return <><button type="button" className="plain-button text-link danger" disabled={disabled||busy} onClick={()=>void open()}>{label}</button>{error&&!preview&&<p role="alert">{error}</p>}<dialog ref={dialog} aria-label="Konfirmasi penghapusan" onCancel={e=>{if(busy)e.preventDefault();}} onClose={()=>setPreview(null)}><h2>Hapus {preview?.title}?</h2><p>Tindakan ini tidak dapat dibatalkan. Data yang akan dihapus:</p><ul><li>{preview?.topics??0} topik dan {preview?.lessons??0} pelajaran</li><li>{preview?.questions??0} soal dan {preview?.attempts??0} riwayat jawaban</li><li>{preview?.readings??0} tanda sudah dibaca dan {preview?.drafts??0} draf tersimpan</li></ul><p>Materi lain tetap tersimpan. Anda dapat mengekspor cadangan melalui Pengaturan sebelum menghapus.</p><label className="field">Ketik HAPUS untuk konfirmasi<input value={confirmation} disabled={busy} autoComplete="off" onChange={e=>setConfirmation(e.target.value)}/></label>{error&&<p role="alert" className="notice">{error}</p>}<div className="actions"><button className="plain-button text-link" disabled={busy} onClick={()=>dialog.current?.close()}>Batal hapus</button><button className="button danger-button" disabled={busy||confirmation!=='HAPUS'} onClick={()=>void remove()}>{busy?'Menghapus…':'Hapus data terpilih'}</button></div></dialog></>;
+}

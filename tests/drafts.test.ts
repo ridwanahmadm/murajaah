@@ -1,11 +1,12 @@
 import 'fake-indexeddb/auto';
+import {installLegacyFixture} from './fixtures/legacy-library';
 import {beforeEach,afterEach,describe,it,expect} from 'vitest';
 import {db,initialize} from '../lib/db';
 import {publishDraft,saveDraft,listDrafts} from '../lib/drafts';
 import {groundDraft,type Draft} from '../lib/generation';
 import {fixture,input} from './fixtures/draft';
 const draft=():Draft=>({id:'test-draft',subjectId:'',subject:'Subjek baru',topic:'Topik baru',grounded:true,data:groundDraft(fixture(),input,[]),createdAt:1});
-beforeEach(async()=>{await db.open();});
+beforeEach(async()=>{await db.open();await initialize();await installLegacyFixture();});
 afterEach(async()=>{await db.delete();});
 describe('local draft publication',()=>{
  it('persists review drafts without publishing, then atomically publishes relations',async()=>{await initialize();await saveDraft(draft());expect(await listDrafts()).toHaveLength(1);expect(await db.lessons.count()).toBe(20);const id=await publishDraft(draft(),false);expect(await db.lessons.get(id)).toMatchObject({status:'draft',origin:'ai'});expect(await db.questions.get('question-test-draft-0')).toMatchObject({lessonId:id,status:'draft'});expect(await db.subjects.get('subject-test-draft')).toBeDefined();expect(await listDrafts()).toHaveLength(0);await expect(publishDraft(draft(),true)).rejects.toThrow();expect(await db.lessons.count()).toBe(21);});

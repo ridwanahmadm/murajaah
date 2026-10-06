@@ -1,8 +1,9 @@
 import 'fake-indexeddb/auto';
+import {installLegacyFixture} from './fixtures/legacy-library';
 import {beforeEach,afterEach,describe,it,expect,vi} from 'vitest';
 import {db,initialize} from '../lib/db';
 import {readLessonSnapshot,updateLesson,deleteLesson} from '../lib/lessons';
-beforeEach(async()=>{await db.open();await initialize();});afterEach(async()=>{await db.delete();});
+beforeEach(async()=>{await db.open();await initialize();await installLegacyFixture();});afterEach(async()=>{await db.delete();});
 async function withHistory(){await db.readings.put({lessonId:'nun',completedAt:1});await db.attempts.bulkPut([{id:'nun-attempt',questionId:'q-0',correct:true,answeredAt:1,box:2},{id:'mim-attempt',questionId:'q-5',correct:true,answeredAt:1,box:2}]);return readLessonSnapshot('nun');}
 describe('material management',()=>{
  it('saves edits while preserving IDs, origin and unrelated data',async()=>{const s=await withHistory();const questions=s.questions.map(q=>({...q,status:'draft' as const}));await updateLesson(s,{...s.lesson,title:'Judul disunting',explanation:'Penjelasan diperbaiki'},questions);expect(await db.lessons.get('nun')).toMatchObject({title:'Judul disunting',origin:'seed'});expect(await db.readings.get('nun')).toBeUndefined();expect(await db.attempts.count()).toBe(2);expect(await db.lessons.get('mim')).toBeDefined();});
