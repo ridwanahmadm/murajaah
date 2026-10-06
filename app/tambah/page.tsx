@@ -1,0 +1,1 @@
+export default function Add(){return <header className="page-head"><p className="eyebrow">PERLUAS PERPUSTAKAAN</p><h1>Tambah materi</h1><p>Pembuatan draf dari referensi akan tersedia pada tahap berikutnya. Tidak ada permintaan AI yang dikirim pada versi ini.</p></header>;}

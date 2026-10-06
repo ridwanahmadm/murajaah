@@ -1,0 +1,3 @@
+import {test,expect} from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+test('read lesson and retain completion',async({page})=>{await page.goto('/');await page.getByRole('link',{name:'Baca materi',exact:true}).click();await expect(page.getByRole('heading',{name:'Hukum Nun Sukun & Tanwin',exact:true})).toBeVisible();await page.getByRole('button',{name:'Tandai sudah dibaca'}).click();await page.reload();await expect(page.getByRole('button',{name:'Sudah dibaca'})).toBeDisabled();expect((await new AxeBuilder({page}).analyze()).violations).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);});

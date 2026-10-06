@@ -1,0 +1,1 @@
+export default function Quiz(){return <><header className="page-head"><p className="eyebrow">ULANGI PEMAHAMAN</p><h1>Kuis</h1><p>Kuis akan tersedia pada tahap berikutnya.</p></header><div className="notice">Untuk saat ini, Anda dapat membaca dua pelajaran awal di Materi. Belum ada sesi kuis yang dapat dimulai.</div></>;}
