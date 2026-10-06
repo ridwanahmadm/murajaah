@@ -2,7 +2,7 @@ import {z} from 'zod';
 const id=z.string().trim().min(1).max(200);
 const short=z.string().trim().min(1).max(2000);
 const http=z.string().url().refine(url=>['http:','https:'].includes(new URL(url).protocol),'Gunakan URL http atau https.');
-export const sourceSchema=z.object({title:short,locator:z.string().max(160),url:http.optional()});
+export const sourceSchema=z.object({title:short,locator:z.string().max(160),url:http.optional(),document:z.literal('tuhfatul-athfal').optional(),pdfPage:z.number().int().min(1).max(31).optional()});
 const provenance={origin:z.enum(['seed','ai','manual']),status:z.enum(['draft','verified']),sourceRef:sourceSchema};
 export const subjectSchema=z.object({id,title:short,description:short,reference:short});
 export const topicSchema=z.object({id,subjectId:id,title:short,order:z.number().int().nonnegative()});

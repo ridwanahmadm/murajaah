@@ -35,6 +35,18 @@ Draf disimpan terpisah dan belum muncul sebagai pelajaran. Edit judul, penjelasa
 
 Materi awal Tahsin: tujuh kerangka topik, dua pelajaran, sepuluh soal. Semuanya Draf, locator kosong, dan rujukan umum. Judul “Praktis Tadjwid Metode As-Syafi’iyah” adalah referensi yang diminta pengguna, bukan atribusi isi/bab buku. Contoh Arab awal adalah diagram huruf, bukan ayat.
 
+## Materi Tuhfatul Athfal dan pengelolaan pelajaran
+
+PDF pengguna `Terjemah-Tuhfatul-Athfal.pdf` (31 halaman), terjemah tafsiriyyah oleh Laili Al-Fadhli, Cetakan II Mei 2017, dibundel lokal di `public/references/terjemah-tuhfatul-athfal.pdf`. Koleksi Tuhfatul Athfal memuat 18 pelajaran ringkas dan 36 soal: pengantar/biografi, semua bab utama, serta delapan lampiran. Tiap pelajaran memiliki nomor halaman cetak, nomor halaman PDF, dan tautan langsung ke PDF. Ringkasan disusun dari sumber, tanpa inferensi AI atau biaya API; semuanya tetap Draf untuk tinjauan pengguna/guru. Contoh singkat adalah diagram huruf, bukan salinan ayat dari ingatan. Perbedaan pembagian ghunnah pada bab tasydid dan lampiran dijelaskan menurut konteks masing-masing.
+
+Koleksi ditambahkan sekali, secara atomik, ke database yang sudah ada. Materi lama tidak ditimpa. Penanda `content:tuhfatul-athfal-v1` mencegah materi yang dihapus muncul kembali, dan ikut cadangan. Impor tetap memulihkan snapshot persis, termasuk snapshot kosong.
+
+Buka pelajaran → **Edit materi** untuk menyunting judul, penjelasan, kaidah, contoh Arab, rujukan, dan soal terkait (termasuk pilihan serta kunci jawaban). Simpan perubahan atau Batal edit. Status kembali Draf kecuali verifikasi ulang dicentang; asal materi dan ID tetap dijaga. Isi pelajaran yang berubah mereset tanda baca; perubahan pertanyaan/pilihan/kunci jawaban atau penghapusan soal mereset riwayat soal terkait saja. Editor memperingatkan perubahan belum disimpan saat reload/menutup tab. Perubahan dari tab lain ditolak sebelum mutasi agar tidak menimpa versi terbaru.
+
+**Hapus materi** menampilkan konfirmasi: pelajaran, soal terkait, riwayat jawaban dan kemajuan membacanya dihapus bersama dalam satu transaksi. Batal tidak mengubah data. Materi lain tetap tersimpan. Kuis yang masih terbuka di tab lain menolak menyimpan jawaban untuk soal yang sudah diubah/dihapus. Tautan pelajaran langsung tetap dapat dipakai untuk mengedit draf walaupun filter daftar terverifikasi aktif.
+
+Font Arab memakai OTF persis dari lampiran, dibundel via next/font/local di `public/fonts/kfgqpc-uthmanic-hafs.otf`, tanpa CDN. PDF dan font dipakai pada aplikasi pribadi ini; berkas asli di Downloads tidak diubah.
+
 ## Cadangan JSON
 
 Di Pengaturan, Ekspor JSON mengunduh subjek, topik, pelajaran, soal, jawaban, kemajuan, draf, bukti, dan filter. Kode akses browser serta kunci AI tidak disertakan. Cadangkan secara berkala; menghapus data browser menghapus data lokal.
@@ -51,13 +63,13 @@ Limiter mengizinkan satu inferensi bersamaan, tiga mulai/menit dan dua belas mul
 
 ## Desain dan konvensi
 
-Acuan usability adalah Nielsen Norman Group, bukan MM Group. Token merek tidak diberikan: gunakan tema terang dengan satu aksen hijau, permukaan netral, warna kesalahan hanya untuk umpan balik fungsional, skala jarak 8 px, dan token di `app/tokens.css`. Inter dan Noto Naskh Arabic dibundel via next/font/local, tanpa CDN font. Arab memakai lang=ar, dir=rtl, ukuran 32 px dan line-height 2 pada contoh. Navigasi bawah di mobile, samping mulai 1024 px. Tidak ada gamifikasi, analytics, ilustrasi dekoratif, atau dependency animasi.
+Acuan usability adalah Nielsen Norman Group, bukan MM Group. Token merek tidak diberikan: gunakan tema terang dengan satu aksen hijau, permukaan netral, warna kesalahan hanya untuk umpan balik fungsional, skala jarak 8 px, dan token di `app/tokens.css`. Inter dan KFGQPC Uthmanic Script HAFS Regular (OTF lampiran pengguna) dibundel via next/font/local, tanpa CDN font. Arab memakai lang=ar, dir=rtl, ukuran 32 px dan line-height 2 pada contoh. Navigasi bawah di mobile, samping mulai 1024 px. Tidak ada gamifikasi, analytics, ilustrasi dekoratif, atau dependency animasi.
 
 Root AGENTS.md dan sources/ adalah file sinkronisasi read-only dan tidak diubah. Konvensi developer aplikasi ada di `app/AGENTS.md`. Gunakan strict TypeScript, pertahankan provenance, dan validasi sebelum mutasi. Tidak boleh menambahkan provider berbayar. Dokumentasi adapter: [Ollama chat](https://docs.ollama.com/api/chat), [structured outputs](https://docs.ollama.com/capabilities/structured-outputs), [MediaWiki search](https://www.mediawiki.org/wiki/API:Search), [text extracts](https://www.mediawiki.org/wiki/Extension:TextExtracts).
 
 ## Verifikasi
 
-- `npm run verify`: lint, typecheck, tes logika/transaksi/keamanan, 22 pasangan kontras token, build produksi.
+- `npm run verify`: lint, typecheck, tes logika/transaksi/keamanan, 24 pasangan kontras token, build produksi.
 - `npx playwright install chromium`, lalu `npm run test:e2e`: axe, alur baca/kuis/draf/cadangan, keyboard, reduced motion, lebar 320/360/390/768/1280 dan zoom 200%.
 - Tes AI nyata opt-in: runtime lokal sudah aktif, `.env.local` terisi, lalu `MURAJAAH_LIVE_AI=1 npx playwright test e2e/live-ai.spec.ts --project=desktop`. Menguji teks sintetis, foto sintetis, dan riset gratis tanpa tagihan API. Bukan bukti bahwa semua keluaran AI akurat.
 - `npm audit`: dependency produksi maupun alat pengembangan. Rantai lint rentan sebelumnya sudah diganti dengan plugin TypeScript/hooks/aksesibilitas yang kompatibel.

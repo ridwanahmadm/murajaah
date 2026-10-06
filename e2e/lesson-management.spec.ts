@@ -1,0 +1,21 @@
+import {test,expect} from '@playwright/test';
+import {createHash} from 'node:crypto';
+import AxeBuilder from '@axe-core/playwright';
+test('PDF material, exact supplied font, edit persistence, and confirmed deletion',async({page})=>{
+ await page.goto('/materi');await expect(page.getByRole('heading',{name:'Tuhfatul Athfal',exact:true})).toBeVisible();
+ await page.getByRole('link',{name:/^Nun Sakinah dan Tanwin/}).click();await expect(page.locator('h1')).toHaveText('Nun Sakinah dan Tanwin');
+ await expect(page.getByRole('link',{name:'Baca PDF sumber (tab baru)'})).toHaveAttribute('href','/references/terjemah-tuhfatul-athfal.pdf#page=7');
+ const pdf=await page.request.get('/references/terjemah-tuhfatul-athfal.pdf');expect(pdf.ok()).toBe(true);expect((await pdf.body()).subarray(0,4).toString()).toBe('%PDF');
+ await page.evaluate(()=>document.fonts.ready);expect(await page.evaluate(()=>{const family=getComputedStyle(document.body).getPropertyValue('--font-arabic').split(',')[0].trim().replaceAll('"','');return [...document.fonts].some(font=>font.family.replaceAll('"','')===family&&font.status==='loaded');})).toBe(true);
+ const font=await page.request.get('/fonts/kfgqpc-uthmanic-hafs.otf');expect(font.ok()).toBe(true);expect(createHash('sha256').update(await font.body()).digest('hex')).toBe('59e20b2403687a67854fd199861abed3528068c035d2689898465d5faf39bb31');
+ await page.getByRole('button',{name:'Edit materi',exact:true}).click();await expect(page.getByRole('heading',{name:'Edit materi',exact:true})).toBeVisible();expect((await new AxeBuilder({page}).analyze()).violations).toEqual([]);
+ await page.getByLabel('Judul pelajaran', {exact:true}).fill('Nun dari PDF — suntingan');await page.getByRole('button',{name:'Batal edit'}).click();await expect(page.locator('h1')).toHaveText('Nun Sakinah dan Tanwin');
+ await page.getByRole('button',{name:'Edit materi',exact:true}).click();await page.getByLabel('Judul pelajaran',{exact:true}).fill('Nun dari PDF — suntingan');await page.getByRole('textbox',{name:'Penjelasan',exact:true}).fill('Materi telah saya tinjau berdasarkan halaman sumber.');await page.getByRole('textbox',{name:'Penjelasan jawaban 1',exact:true}).fill('Jawaban diperiksa pada PDF halaman tujuh dan delapan.');await page.getByLabel('Saya telah memverifikasi ulang materi, sumber, dan semua jawaban kuis.').check();await page.getByRole('button',{name:'Simpan perubahan'}).click();await expect(page.locator('h1')).toHaveText('Nun dari PDF — suntingan');await expect(page.getByText('Terverifikasi',{exact:true})).toBeVisible();
+ await page.reload();await expect(page.locator('h1')).toHaveText('Nun dari PDF — suntingan');await expect(page.getByText('Materi telah saya tinjau berdasarkan halaman sumber.',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Hapus materi',exact:true}).click();await expect(page.getByRole('dialog')).toBeVisible();expect((await new AxeBuilder({page}).analyze()).violations).toEqual([]);await page.getByRole('button',{name:'Batal hapus'}).click();await expect(page.getByRole('dialog')).not.toBeVisible();await expect(page.locator('h1')).toHaveText('Nun dari PDF — suntingan');
+ await page.getByRole('button',{name:'Hapus materi',exact:true}).click();await page.getByRole('button',{name:'Ya, hapus materi'}).click();await expect(page).toHaveURL(/\/materi$/);await page.reload();await expect(page.getByRole('link',{name:/^Nun dari PDF/})).toHaveCount(0);await expect(page.getByRole('link',{name:/^Mim Sakinah/})).toBeVisible();
+ await page.goto('/materi/tuhfah-nun');await expect(page.locator('h1')).toHaveText('Materi tidak ditemukan');
+});
+test('PDF quizzes can be scoped independently of original Tahsin materials',async({page})=>{
+ await page.goto('/kuis');await page.getByRole('combobox',{name:'Subjek',exact:true}).selectOption('tuhfatul-athfal');await expect(page.getByText(/36 soal tersedia/)).toBeVisible();await page.getByRole('combobox',{name:'Jumlah soal',exact:true}).selectOption('20');await page.getByRole('button',{name:'Mulai kuis'}).click();await expect(page.getByText('SOAL 1 DARI 20')).toBeVisible();
+});

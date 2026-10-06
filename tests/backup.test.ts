@@ -9,7 +9,7 @@ describe('JSON backup',()=>{
   const backup=await exportBackup();expect(JSON.stringify(backup)).not.toContain('private');await db.lessons.update('nun',{title:'changed'});await importBackup(backup);expect((await db.lessons.get('nun'))?.title).toBe('Hukum Nun Sukun & Tanwin');expect(await db.attempts.count()).toBe(1);expect(await db.meta.get('access-code')).toBeUndefined();
  });
  it('rejects malformed backups and orphan relations before mutating storage',async()=>{
-  const data=await exportBackup();const invalid={...data,lessons:[]};await expect(importBackup(invalid)).rejects.toThrow();expect(await db.lessons.count()).toBe(2);expect(()=>validateBackup({...data,format:'other'})).toThrow();
+  const data=await exportBackup();const invalid={...data,lessons:[]};await expect(importBackup(invalid)).rejects.toThrow();expect(await db.lessons.count()).toBe(20);expect(()=>validateBackup({...data,format:'other'})).toThrow();
  });
  it('rejects duplicate IDs, unsafe URLs and unrecognized metadata',async()=>{
   const data=await exportBackup();expect(()=>validateBackup({...data,subjects:[...data.subjects,data.subjects[0]]})).toThrow();const unsafe=structuredClone(data);unsafe.lessons[0].sourceRef.url='javascript:alert(1)';expect(()=>validateBackup(unsafe)).toThrow();expect(()=>validateBackup({...data,meta:[{key:'secret',value:'do not import'}]})).toThrow();
