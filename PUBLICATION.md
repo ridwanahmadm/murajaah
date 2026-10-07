@@ -4,9 +4,9 @@ Live URL: https://murajaah.ridwan-22693.chatgpt.site
 Audience: public. Native Sites deployment returned `succeeded`.
 
 - Site: `appgprj_6ac5836915bc8191a2c1df422bb66a59`
-- Version: `appgprj_6ac5836915bc8191a2c1df422bb66a59~appgver_8e635c49faf881918c397d957bb512ef`
-- Deployment: `appgdep_6ac58507b39c8191a3be58f4777aa6e1`
-- Published source commit: `03cc5b886bedd671a82385efc0d3e448b823f4b9`
+- Version: `appgprj_6ac5836915bc8191a2c1df422bb66a59~appgver_5d87d72403048191b929fa92e52beaef`
+- Deployment: `appgdep_6ac5b2d35f4c8191adac83041fd82289`
+- Published source commit: `65d80a38dd5a2a6e084828a63ae2b96330469089`
 - Site checkout/identity: `public-site/.openai/hosting.json`. Reuse this existing project; do not register another site for later updates.
 
 Run `npm run build:public` from this workspace to build `dist-public/` and refresh the sanitized Site checkout. Use the Sites hosting workflow to open/sync that same checkout before future publication. Its static directory is `dist`. Credentials belong only in session memory/stdin; no credential or local AI configuration is part of this release.
@@ -17,7 +17,7 @@ Existing localhost records are independent of this public origin: export JSON fr
 
 Public material creation supports manual drafts, local PDF extraction and opt-in WebLLM/Qwen3.5 browser AI; local Next also supports free Ollama. No paid inference is used. Public output bundles the supplied Quran font and source PDF, with attribution retained in the lessons.
 
-Validation: 59 unit tests, 28 local browser cases, 6 public browser cases, 24 contrast checks, lint/typecheck, public static build and local Next webpack production build passed. Two optional live Ollama browser cases were skipped. Native successful deployment status verifies publication; no agent fetch of the production URL was used.
+Validation: 63 unit tests, 30 local browser cases, 12 public browser cases, 24 contrast checks, lint/typecheck, public static build and local Next webpack production build passed. Two optional live Ollama browser cases were skipped. Native successful deployment status verifies publication; no agent fetch of the production URL was used.
 
 Public URL label changed to `murajaah` on 7 October 2026. Native slug change returned `complete` and the new live URL; the existing project, saved version and public audience are retained. Because browser data is scoped to its origin, JSON export/import is required to carry personal records between the previous address and this address.
 
@@ -25,13 +25,13 @@ Public URL label changed to `murajaah` on 7 October 2026. Native slug change ret
 
 - Public repository: https://github.com/ridwanahmadm/murajaah
 - Live GitHub Pages site: https://ridwanahmadm.github.io/murajaah/
-- Published application source: `a7fd52fa2c49126a1bba221952ba6b2736adfc03`
-- Successful build/deployment: https://github.com/ridwanahmadm/murajaah/actions/runs/37561286823
+- Published application source: `d93b23d3045b9bcea6289a9d14964073c8077606`
+- Successful build/deployment: https://github.com/ridwanahmadm/murajaah/actions/runs/37563633335
 - Pages configuration: workflow deployment, public, HTTPS enforced. `origin` points to this user's GitHub repository; `main` tracks `origin/main`.
 
 Workflow `.github/workflows/pages.yml` builds the static application using `/murajaah/` as the base path and deploys on pushes to `main`. Browser data and local AI settings remain outside GitHub. Public repository Pages and public Actions runners require no paid AI service or hosting subscription.
 
-Verification: GitHub's build and deploy jobs both succeeded. Live homepage, manifest, service worker, supplied Arabic font, and source PDF returned HTTP 200. Manifest and service worker contain the correct repository path. Six mobile/desktop browser checks passed for that path, and six more passed for the original root path. 59 unit tests, lint, typecheck, 24 contrast checks, and local Next webpack production build passed; GitHub repeated the clean dependency install, checks and static build successfully.
+Verification: GitHub's build and deploy jobs both succeeded. Live homepage, manifest, service worker, supplied Arabic font, and source PDF returned HTTP 200. Manifest and service worker contain the correct repository path. Twelve mobile/desktop browser checks passed for that path, and twelve more passed for the original root path. 63 unit tests, lint, typecheck, 24 contrast checks, and local Next webpack production build passed; GitHub repeated the clean dependency install, checks and static build successfully.
 
 GitHub Pages uses a different browser origin from Sites and localhost. Export/import a JSON backup to migrate personal material and progress. Documentation-only commits may skip CI after successful publication; application changes continue to deploy automatically.
 
