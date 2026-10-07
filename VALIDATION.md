@@ -75,3 +75,11 @@ Root AGENTS.md dan sources/ tidak diubah. Konvensi/commands ditambahkan ke app/A
 - Sites identity is persisted at `public-site/.openai/hosting.json`. Public access was explicitly enabled for the user-requested audience. Package source commit: `03cc5b886bedd671a82385efc0d3e448b823f4b9`.
 - Local browser regression: 28 checks passed; 2 opt-in live Ollama checks skipped. Free AI provider configuration was not changed by this publication.
 - Publication confirmed `succeeded`: https://murajaah-ridwan.ridwan-22693.chatgpt.site . Version and deployment identifiers are recorded in PUBLICATION.md. No paid AI API, external account signup, or cloud database was configured.
+
+## GitHub Pages — 7 October 2026
+
+- Pushed complete tracked project history to public `ridwanahmadm/belajartahsin`; excluded local environment/secrets, AI runtime, synced references, generated build output and browser records. Added explicit ignores for root synced AGENTS.md and sources/.
+- Added a configurable static base path for Vite assets, PDF URLs, installation manifest and service worker, with per-path application caches. GitHub Pages build does not mutate the separate Sites checkout.
+- Tests: 6 public browser checks on `/belajartahsin/` and 6 on `/`, all passed across mobile/desktop. 59 unit tests, typecheck/lint, 24 contrast checks, and local webpack production build passed.
+- GitHub Actions run 37561286823: clean `npm ci`, lint, typecheck, unit tests, contrast, static build and deploy all succeeded for source a7fd52fa2c49126a1bba221952ba6b2736adfc03.
+- Live https://ridwanahmadm.github.io/belajartahsin/ and manifest/service worker/font/PDF endpoints returned HTTP 200. Manifest start_url/scope and worker paths validated. HTTPS is enforced; no paid AI or hosting service was added.

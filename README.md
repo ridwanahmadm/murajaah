@@ -107,3 +107,5 @@ Repositori GitHub: https://github.com/ridwanahmadm/belajartahsin . Publikasi gra
 Build GitHub menggunakan `PUBLIC_BASE_PATH=/belajartahsin/` agar file aplikasi, font, PDF, manifest pemasangan dan salinan offline berada di jalur repositori yang benar. `PUBLIC_SYNC_SITE=false` mencegah build tersebut mengubah checkout hosting Sites. Untuk deployment di root, jalankan build tanpa `PUBLIC_BASE_PATH`.
 
 Data pribadi browser tetap tidak diunggah ke GitHub. Penyimpanan pada GitHub Pages terpisah dari localhost dan Sites; gunakan cadangan JSON untuk memindahkan materi/progres.
+
+Alamat GitHub Pages yang sudah diterbitkan: https://ridwanahmadm.github.io/belajartahsin/ . Catatan verifikasi dan kedua alamat publik tersedia di PUBLICATION.md.
