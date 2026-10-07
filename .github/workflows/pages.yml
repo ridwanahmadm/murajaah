@@ -24,6 +24,7 @@ jobs:
         env:
           PUBLIC_BASE_PATH: /${{ github.event.repository.name }}/
           PUBLIC_SYNC_SITE: 'false'
+          NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist-public

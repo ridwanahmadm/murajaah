@@ -117,3 +117,11 @@ Catatan kajian tersimpan pribadi di IndexedDB dan ikut cadangan JSON. Tambah mat
 AI browser memakai WebLLM dan Qwen3.5 0.8B, 2B, atau 4B, tanpa API berbayar. Unduhan model perlu internet sekali, GPU dengan WebGPU dan memori yang cukup. Teks tidak dikirim ke layanan inference cloud. Maksimal 6.000 karakter per proses; hasil harus lolos schema, bukti kutipan sumber, dan pemeriksaan pengguna. Ollama lokal tetap tersedia di versi Next. Soal baru dari materi tersimpan ditinjau dan disimpan atomik sebagai draf. Riset UX dan batas benchmark tercatat di docs/UX-RESEARCH.md.
 
 Perubahan alamat memisahkan penyimpanan browser: ekspor cadangan JSON dari alamat lama lalu impor pada alamat Murajaah untuk memindahkan progres.
+
+## Cadangan perangkat dan Google Drive
+
+Data belajar tetap otomatis tersimpan di IndexedDB. Pengaturan menyediakan ekspor/impor JSON dan panduan publik public/panduan-cadangan.html (termasuk Android/iPhone, file di Unduhan/Files, migrasi HP, dan keterbatasan pemulihan tanpa cadangan).
+
+Cadangan Google Drive bersifat opsional dan manual: SDK Google hanya dimuat setelah tindakan pengguna; OAuth scope drive.appdata hanya mengakses folder aplikasi milik akun yang pengguna pilih. Token berada di memori sesi, tidak di localStorage/IndexedDB/cadangan. Upload membuat snapshot baru tanpa menimpa/menghapus cadangan lama. Download maksimal 20 MB, validasi relasi/schema dan tinjauan, lalu konfirmasi impor atomik. Kuota/izin gagal tidak memicu retry atau fallback berbayar. Tidak ada sinkronisasi otomatis atau penggabungan data.
+
+Aktivasi: ikuti public/panduan-google-drive.html. Buat OAuth Web Client tanpa billing, atur origins persis kedua situs, audience/test users dan persyaratan publikasi Google. Terbitkan dengan NEXT_PUBLIC_GOOGLE_CLIENT_ID; GitHub Actions memakai repository variable GOOGLE_CLIENT_ID. Client ID publik bukan rahasia. Saat belum dikonfigurasi, UI menyatakan Drive belum aktif dan ekspor file tetap berfungsi. Pengelola bisa menguji Client ID pada browser sendiri lewat panel konfigurasi; pengguna umum memakai Client ID yang diterbitkan bersama situs.
