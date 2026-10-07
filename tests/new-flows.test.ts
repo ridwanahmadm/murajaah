@@ -1,0 +1,16 @@
+import 'fake-indexeddb/auto';
+import {beforeEach,afterEach,it,expect} from 'vitest';
+import {db,initialize} from '../lib/db';
+import {saveNote,noteSchema} from '../lib/notes';
+import {exportBackup,importBackup,validateBackup} from '../lib/backup';
+import {manualDraft} from '../lib/material-input';
+import {validateDraft} from '../lib/generation';
+import {validateDeviceResult} from '../lib/device-ai';
+import {saveGeneratedQuestions} from '../lib/generated-questions';
+import {fixture,input} from './fixtures/draft';
+beforeEach(async()=>{await db.open();});
+afterEach(async()=>{await db.delete();});
+it('preserves long manual sources and creates no invented questions',()=>{const text=Array.from({length:180},(_,i)=>`Paragraf ${i}: ilmu dipahami lalu diulang.`).join('\n');const draft=manualDraft({subjectId:'',subject:'Umum',topic:'Belajar',reference:'Catatan',locator:'',text});validateDraft(draft.data);expect(draft.data.lessons.length).toBeGreaterThan(3);expect(draft.data.lessons.map(l=>l.explanation).join('\n')).toBe(text);expect(draft.data.questions).toEqual([]);expect(draft.origin).toBe('manual');});
+it('rejects invalid note dates and atomically restores notes with backwards-compatible backups',async()=>{await initialize();const note={id:'note',title:'Kajian',speaker:'Guru',date:'2026-10-07',reference:'Catatan',content:'Ilmu yang bermanfaat.',updatedAt:1};await saveNote(note);const backup=await exportBackup();expect(backup.notes).toEqual([note]);await db.notes.clear();await importBackup(backup);expect(await db.notes.get(note.id)).toEqual(note);expect(()=>noteSchema.parse({...note,date:'2026-02-30'})).toThrow();await expect(importBackup({...backup,notes:[note,note]})).rejects.toThrow();expect(await db.notes.count()).toBe(1);const legacy={...backup};delete (legacy as {notes?:unknown}).notes;expect(validateBackup(legacy).notes).toEqual([]);});
+it('grounds browser output and rejects fabricated quotations and wrong answers',()=>{const raw=fixture();expect(validateDeviceResult(raw,input).lessons[0].sourceRef.title).toBe(input.reference);raw.questions[0].evidence='This quotation is entirely invented';expect(()=>validateDeviceResult(raw,input)).toThrow();raw.questions[0].evidence=input.suppliedText;raw.questions[0].correctIndex=4;expect(()=>validateDeviceResult(raw,input)).toThrow();});
+it('rejects stale AI quiz sources without adding partial questions',async()=>{await initialize();const lesson=(await db.lessons.toArray())[0];const existing=(await db.questions.toArray())[0];const question={...existing,id:'fresh-ai',lessonId:lesson.id,origin:'ai' as const,status:'draft' as const};const before=await db.questions.count();await db.lessons.update(lesson.id,{title:'Changed source'});await expect(saveGeneratedQuestions(lesson,[question])).rejects.toThrow('berubah');expect(await db.questions.count()).toBe(before);const current=(await db.lessons.get(lesson.id))!;await saveGeneratedQuestions(current,[question]);expect(await db.questions.count()).toBe(before+1);});

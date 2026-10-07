@@ -1,6 +1,7 @@
 import {useEffect} from 'react';
 import {createRoot} from 'react-dom/client';
 import {usePathname} from './navigation';
+import Notes from '../app/catatan/page';
 import Home from '../app/page';
 import Materials from '../app/materi/page';
 import Lesson from '../app/materi/[lessonId]/page';
@@ -14,5 +15,5 @@ import {Nav} from '../components/nav';
 import {DeviceStorage} from './storage';
 import '../app/globals.css';
 import './public.css';
-function App(){const path=usePathname();useEffect(()=>{window.scrollTo(0,0);const heading=document.querySelector<HTMLHeadingElement>('main h1');if(heading){heading.tabIndex=-1;heading.focus();}},[path]);const page=path==='/'?<Home/>:path==='/materi'?<Materials/>:path.startsWith('/materi/koleksi/')?<Collection key={path}/>:path.startsWith('/materi/')?<Lesson key={path}/>:path==='/kuis'?<Quiz/>:path==='/tambah'?<Add/>:path==='/pengaturan'?<Settings/>:<NotFound/>;return <><a href="#main" className="skip" onClick={event=>{event.preventDefault();document.getElementById('main')?.focus();}}>Lewati navigasi</a><LibraryProvider><Nav/><main id="main" tabIndex={-1}>{page}{(path==='/'||path==='/pengaturan')&&<DeviceStorage/>}</main></LibraryProvider></>;}
+function App(){const path=usePathname();useEffect(()=>{window.scrollTo(0,0);const heading=document.querySelector<HTMLHeadingElement>('main h1');if(heading){heading.tabIndex=-1;heading.focus();}},[path]);const page=path==='/'?<Home/>:path==='/materi'?<Materials/>:path.startsWith('/materi/koleksi/')?<Collection key={path}/>:path.startsWith('/materi/')?<Lesson key={path}/>:path==='/catatan'?<Notes/>:path==='/kuis'?<Quiz/>:path==='/tambah'?<Add/>:path==='/pengaturan'?<Settings/>:<NotFound/>;return <><a href="#main" className="skip" onClick={event=>{event.preventDefault();document.getElementById('main')?.focus();}}>Lewati navigasi</a><LibraryProvider><Nav/><main id="main" tabIndex={-1}>{page}{(path==='/'||path==='/pengaturan')&&<DeviceStorage/>}</main></LibraryProvider></>;}
 createRoot(document.getElementById('root')!).render(<App/>);

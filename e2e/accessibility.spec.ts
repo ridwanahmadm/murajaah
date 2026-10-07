@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-const routes=['/','/materi','/materi/tuhfah-nun','/materi/koleksi/tuhfatul-athfal','/kuis','/tambah','/pengaturan','/tidak-ada'];
+const routes=['/','/materi','/materi/tuhfah-nun','/materi/koleksi/tuhfatul-athfal','/kuis','/tambah','/catatan','/pengaturan','/tidak-ada'];
 test('all screens meet automated accessibility checks',async({page})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  for(const path of routes){await page.goto(path);await expect(page.locator('h1')).toBeVisible();await expect(page.getByRole('status',{name:'Status cadangan'}).or(page.getByRole('button',{name:'Mulai kuis'})).or(page.locator('h1')).first()).toBeVisible();expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations,`axe ${path}`).toEqual([]);}
@@ -13,5 +13,5 @@ test('reflow at required widths and 200 percent zoom',async({page},testInfo)=>{
 });
 test('keyboard skip link, visible focus and reduced motion',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');await page.keyboard.press('Tab');await expect(page.getByRole('link',{name:'Lewati navigasi'})).toBeFocused();await page.keyboard.press('Enter');await page.keyboard.press('Tab');const focused=page.locator(':focus');await expect(focused).toHaveCSS('outline-style','solid');await expect(focused).toHaveCSS('outline-width','3px');
- await page.goto('/kuis');await page.getByRole('button',{name:'Mulai kuis'}).click();await expect(page.locator('.question-heading')).toBeFocused();await page.keyboard.press('Tab');await page.keyboard.press('Space');await expect(page.getByRole('radio').first()).toBeChecked();await expect(page.getByRole('button',{name:'Periksa jawaban'})).toBeEnabled();
+ await page.goto('/kuis');await page.getByRole('button',{name:'Siapkan kuis'}).click();await page.getByRole('button',{name:'Mulai kuis'}).click();await expect(page.locator('.question-heading')).toBeFocused();await page.keyboard.press('Tab');await page.keyboard.press('Space');await expect(page.getByRole('radio').first()).toBeChecked();await expect(page.getByRole('button',{name:'Periksa jawaban'})).toBeEnabled();
 });

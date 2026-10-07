@@ -17,13 +17,13 @@ export const aiDraftSchema = z.object({
     rules: z.array(z.object({ name: text, description: text }).strict()).min(1).max(8),
     examples: z.array(z.object({ arabic: z.string().max(48), transliteration: text, meaning: text, note: text }).strict()).max(4),
     sourceRef: aiSource, evidence: z.string().max(160),
-  }).strict()).min(1).max(3),
+  }).strict()).min(1).max(60),
   questions: z.array(z.object({
-    lessonIndex: z.number().int().min(0).max(2),
+    lessonIndex: z.number().int().min(0).max(59),
     type: z.enum(['multiple-choice', 'true-false', 'identify-rule']),
     prompt: text, options: z.array(text).min(2).max(5), correctIndex: z.number().int().min(0).max(4),
     explanation: text, sourceRef: aiSource, evidence: z.string().max(160),
-  }).strict()).min(1).max(10),
+  }).strict()).min(0).max(100),
 }).strict();
 export type GenerationInput = z.infer<typeof generationInputSchema>;
 export type AIDraft = z.infer<typeof aiDraftSchema>;

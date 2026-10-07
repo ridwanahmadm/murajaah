@@ -1,6 +1,6 @@
 # Murajaah public publication
 
-Live URL: https://belajartahsin.ridwan-22693.chatgpt.site
+Live URL: https://murajaah.ridwan-22693.chatgpt.site
 Audience: public. Native Sites deployment returned `succeeded`.
 
 - Site: `appgprj_6ac5836915bc8191a2c1df422bb66a59`
@@ -15,22 +15,28 @@ For users: open the public URL, wait for **Salinan offline siap**, then install 
 
 Existing localhost records are independent of this public origin: export JSON from localhost settings, then import it in public settings. There is no automatic synchronization or public upload of personal study records. Keep a JSON backup for migration/recovery.
 
-Public material creation is manual and free of AI API calls; local Next continues to use free Ollama only. Public output bundles the supplied Quran font and source PDF, with attribution retained in the lessons.
+Public material creation supports manual drafts, local PDF extraction and opt-in WebLLM/Qwen3.5 browser AI; local Next also supports free Ollama. No paid inference is used. Public output bundles the supplied Quran font and source PDF, with attribution retained in the lessons.
 
 Validation: 59 unit tests, 28 local browser cases, 6 public browser cases, 24 contrast checks, lint/typecheck, public static build and local Next webpack production build passed. Two optional live Ollama browser cases were skipped. Native successful deployment status verifies publication; no agent fetch of the production URL was used.
 
-Public URL label changed to `belajartahsin` on 7 October 2026. Native slug change returned `complete` and the new live URL; the existing project, saved version and public audience are retained. Because browser data is scoped to its origin, JSON export/import is required to carry personal records between the previous address and this address.
+Public URL label changed to `murajaah` on 7 October 2026. Native slug change returned `complete` and the new live URL; the existing project, saved version and public audience are retained. Because browser data is scoped to its origin, JSON export/import is required to carry personal records between the previous address and this address.
 
 ## GitHub publication — 7 October 2026
 
-- Public repository: https://github.com/ridwanahmadm/belajartahsin
-- Live GitHub Pages site: https://ridwanahmadm.github.io/belajartahsin/
+- Public repository: https://github.com/ridwanahmadm/murajaah
+- Live GitHub Pages site: https://ridwanahmadm.github.io/murajaah/
 - Published application source: `a7fd52fa2c49126a1bba221952ba6b2736adfc03`
-- Successful build/deployment: https://github.com/ridwanahmadm/belajartahsin/actions/runs/37561286823
+- Successful build/deployment: https://github.com/ridwanahmadm/murajaah/actions/runs/37561286823
 - Pages configuration: workflow deployment, public, HTTPS enforced. `origin` points to this user's GitHub repository; `main` tracks `origin/main`.
 
-Workflow `.github/workflows/pages.yml` builds the static application using `/belajartahsin/` as the base path and deploys on pushes to `main`. Browser data and local AI settings remain outside GitHub. Public repository Pages and public Actions runners require no paid AI service or hosting subscription.
+Workflow `.github/workflows/pages.yml` builds the static application using `/murajaah/` as the base path and deploys on pushes to `main`. Browser data and local AI settings remain outside GitHub. Public repository Pages and public Actions runners require no paid AI service or hosting subscription.
 
 Verification: GitHub's build and deploy jobs both succeeded. Live homepage, manifest, service worker, supplied Arabic font, and source PDF returned HTTP 200. Manifest and service worker contain the correct repository path. Six mobile/desktop browser checks passed for that path, and six more passed for the original root path. 59 unit tests, lint, typecheck, 24 contrast checks, and local Next webpack production build passed; GitHub repeated the clean dependency install, checks and static build successfully.
 
 GitHub Pages uses a different browser origin from Sites and localhost. Export/import a JSON backup to migrate personal material and progress. Documentation-only commits may skip CI after successful publication; application changes continue to deploy automatically.
+
+## Murajaah revision
+
+The user explicitly requested renaming the product, Sites URL and GitHub repository to Murajaah. Notes are stored privately and included in backwards-compatible JSON backups. Font Awesome Free icons and license notices are bundled. Material creation separates new/existing subject selection, source entry, editable review and publication. PDF page selection retains page attribution. Quiz begins with an introduction and offers saved questions or reviewed AI generation from existing material.
+
+Revision checks: 63 unit tests, 30 local browser cases, 12 public-root browser cases, 12 GitHub-path browser cases, lint/typecheck, 24 contrast checks, local Next webpack build and both static builds. Two optional live Ollama cases remain opt-in; AI quiz UI tests use controlled responses. The headless browser exposed WebGPU but returned no GPU adapter, so actual browser model inference could not be validated on this runner. Source grounding, invalid evidence/answer rejection, stale-source atomic saves and manual fallback were verified.

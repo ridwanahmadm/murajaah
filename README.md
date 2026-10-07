@@ -4,7 +4,7 @@ Aplikasi belajar pribadi dalam Bahasa Indonesia: pelajaran singkat, kuis acak, t
 
 ## Menjalankan tanpa layanan berbayar
 
-Tidak ada API berbayar, langganan, login, analitik, atau database server. Adapter hanya mengizinkan Ollama pada loopback. Provider selain `ollama`, endpoint jarak jauh, model cloud, dan alias model ke cloud ditolak; tidak ada fallback berbayar. `AI_API_KEY` tidak digunakan.
+Tidak ada API berbayar, langganan, login, analitik, atau database server. Adapter server hanya mengizinkan Ollama pada loopback. Provider selain `ollama`, endpoint jarak jauh, model cloud, dan alias model ke cloud ditolak; tidak ada fallback berbayar. `AI_API_KEY` tidak digunakan.
 
 1. `npm ci`
 2. Pasang [Ollama](https://ollama.com/download) gratis. Untuk instalasi terisolasi yang sudah tersedia pada workspace ini, runtime ada di `.local-ai/runtime/ollama` dan model di `.local-ai/models`; keduanya diabaikan Git.
@@ -102,10 +102,18 @@ Pemeriksaan versi publik: `PLAYWRIGHT_BROWSERS_PATH=/private/tmp/murajaah-browse
 
 ## GitHub Pages
 
-Repositori GitHub: https://github.com/ridwanahmadm/belajartahsin . Publikasi gratis menggunakan repositori publik dan workflow `.github/workflows/pages.yml`: push ke `main` menjalankan pemeriksaan, membangun versi statis, lalu menerbitkannya lewat GitHub Pages.
+Repositori GitHub: https://github.com/ridwanahmadm/murajaah . Publikasi gratis menggunakan repositori publik dan workflow `.github/workflows/pages.yml`: push ke `main` menjalankan pemeriksaan, membangun versi statis, lalu menerbitkannya lewat GitHub Pages.
 
-Build GitHub menggunakan `PUBLIC_BASE_PATH=/belajartahsin/` agar file aplikasi, font, PDF, manifest pemasangan dan salinan offline berada di jalur repositori yang benar. `PUBLIC_SYNC_SITE=false` mencegah build tersebut mengubah checkout hosting Sites. Untuk deployment di root, jalankan build tanpa `PUBLIC_BASE_PATH`.
+Build GitHub menggunakan `PUBLIC_BASE_PATH=/murajaah/` agar file aplikasi, font, PDF, manifest pemasangan dan salinan offline berada di jalur repositori yang benar. `PUBLIC_SYNC_SITE=false` mencegah build tersebut mengubah checkout hosting Sites. Untuk deployment di root, jalankan build tanpa `PUBLIC_BASE_PATH`.
 
 Data pribadi browser tetap tidak diunggah ke GitHub. Penyimpanan pada GitHub Pages terpisah dari localhost dan Sites; gunakan cadangan JSON untuk memindahkan materi/progres.
 
-Alamat GitHub Pages yang sudah diterbitkan: https://ridwanahmadm.github.io/belajartahsin/ . Catatan verifikasi dan kedua alamat publik tersedia di PUBLICATION.md.
+Alamat GitHub Pages yang sudah diterbitkan: https://ridwanahmadm.github.io/murajaah/ . Catatan verifikasi dan kedua alamat publik tersedia di PUBLICATION.md.
+
+## Materi, catatan, dan kuis
+
+Catatan kajian tersimpan pribadi di IndexedDB dan ikut cadangan JSON. Tambah materi dimulai dari pilihan subjek baru atau subjek yang sudah ada, lalu bahan, tinjauan, dan penerbitan. PDF diproses di perangkat: maksimal 20 MB dan 30 halaman per impor; scan memerlukan OCR. Mode manual menjaga seluruh teks hingga 100.000 karakter dan tidak membuat soal palsu.
+
+AI browser memakai WebLLM dan Qwen3.5 0.8B, 2B, atau 4B, tanpa API berbayar. Unduhan model perlu internet sekali, GPU dengan WebGPU dan memori yang cukup. Teks tidak dikirim ke layanan inference cloud. Maksimal 6.000 karakter per proses; hasil harus lolos schema, bukti kutipan sumber, dan pemeriksaan pengguna. Ollama lokal tetap tersedia di versi Next. Soal baru dari materi tersimpan ditinjau dan disimpan atomik sebagai draf. Riset UX dan batas benchmark tercatat di docs/UX-RESEARCH.md.
+
+Perubahan alamat memisahkan penyimpanan browser: ekspor cadangan JSON dari alamat lama lalu impor pada alamat Murajaah untuk memindahkan progres.

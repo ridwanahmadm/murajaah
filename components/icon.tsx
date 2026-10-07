@@ -1,0 +1,4 @@
+import {faHouse,faBookOpen,faCircleQuestion,faPlus,faGear,faPenToSquare,faArrowLeft,faArrowRight,faFilePdf,faLayerGroup,faFolderPlus,faWandMagicSparkles,faCheck,faTrash,faBookmark} from '@fortawesome/free-solid-svg-icons';
+const icons={home:faHouse,book:faBookOpen,quiz:faCircleQuestion,plus:faPlus,settings:faGear,notes:faPenToSquare,back:faArrowLeft,next:faArrowRight,pdf:faFilePdf,layers:faLayerGroup,folder:faFolderPlus,ai:faWandMagicSparkles,check:faCheck,trash:faTrash,bookmark:faBookmark};
+export type IconName=keyof typeof icons;
+export function Icon({name,className=''}:{name:IconName;className?:string}){const [width,height,,,paths]=icons[name].icon;return <svg className={`icon ${className}`} viewBox={`0 0 ${width} ${height}`} aria-hidden="true" focusable="false">{(Array.isArray(paths)?paths:[paths]).map((path,i)=><path key={i} fill="currentColor" d={path}/>)}</svg>;}

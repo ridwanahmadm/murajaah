@@ -4,6 +4,7 @@ import {resolve,relative} from 'node:path';
 import {createHash} from 'node:crypto';
 const root=resolve('.');const out=resolve(root,existsSync(resolve(root,'.openai/hosting.json'))?'dist':'dist-public');
 const base=process.env.PUBLIC_BASE_PATH??'/';if(!/^\/(?:[a-zA-Z0-9_-]+\/)*$/.test(base))throw new Error('PUBLIC_BASE_PATH must be an absolute path with a trailing slash.');
+cpSync(resolve(root,'node_modules/pdfjs-dist/build/pdf.worker.min.mjs'),resolve(root,'public/pdf.worker.min.mjs'));
 mkdirSync(resolve(root,'public/fonts'),{recursive:true});cpSync(resolve(root,'node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2'),resolve(root,'public/fonts/inter-latin.woff2'));
 await build({base,root:resolve(root,'public-app'),publicDir:resolve(root,'public'),configFile:false,resolve:{alias:{'@':root,'next/link':resolve(root,'public-app/navigation.tsx'),'next/navigation':resolve(root,'public-app/navigation.tsx'),'next/image':resolve(root,'public-app/image.tsx')}},define:{'process.env.NEXT_PUBLIC_PUBLIC_EDITION':JSON.stringify('true'),'process.env.NEXT_PUBLIC_BASE_PATH':JSON.stringify(base)},css:{postcss:root},build:{outDir:out,emptyOutDir:true,rolldownOptions:{onwarn(warning,warn){if(warning.code!=='MODULE_LEVEL_DIRECTIVE')warn(warning);}}}});
 mkdirSync(resolve(out,'fonts'),{recursive:true});cpSync(resolve(root,'node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2'),resolve(out,'fonts/inter-latin.woff2'));

@@ -14,3 +14,5 @@ playwright-report/
 
 /AGENTS.md
 /sources/
+
+/public/pdf.worker.min.mjs

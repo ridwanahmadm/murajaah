@@ -1,0 +1,7 @@
+import {test,expect} from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+import {fixture,input} from '../tests/fixtures/draft';
+import {groundDraft} from '../lib/generation';
+test('AI quiz draft is reviewed, edited and saved before starting its source-scoped session',async({page})=>{
+ await page.goto('/pengaturan');await page.getByLabel('Kode akses',{exact:true}).fill('test-access-code-long-enough');await page.getByRole('button',{name:'Simpan pengaturan'}).click();await page.getByRole('link',{name:'Kuis',exact:true}).click();await page.getByRole('button',{name:'Siapkan kuis'}).click();await page.getByRole('button',{name:'Buat soal baru dengan AI',exact:true}).click();await page.route('**/api/generate',route=>route.fulfill({json:{data:groundDraft(fixture(),input,[]),grounded:true}}));await page.getByRole('button',{name:'Generate soal AI'}).click();await expect(page.getByRole('heading',{name:'Tinjau 1 soal'})).toBeVisible();await expect(page.getByRole('button',{name:'Gunakan soal ini'})).toBeDisabled();await page.getByLabel('Pertanyaan 1',{exact:false}).fill('Apa makna mad dari catatan?');expect((await new AxeBuilder({page}).analyze()).violations).toEqual([]);await page.getByLabel('Saya sudah meninjau soal AI dan jawaban dengan sumber.').check();await page.getByRole('button',{name:'Gunakan soal ini'}).click();await expect(page.getByRole('button',{name:'Mulai kuis',exact:true})).toBeVisible();await page.getByRole('button',{name:'Mulai kuis',exact:true}).click();await expect(page.locator('.question-heading')).toBeVisible();
+});

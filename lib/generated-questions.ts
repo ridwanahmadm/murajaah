@@ -1,0 +1,3 @@
+import {db} from './db';
+import {questionSchema,type Lesson,type Question} from './schema';
+export async function saveGeneratedQuestions(lesson:Lesson,questions:Question[]){const checked=questions.map(question=>questionSchema.parse(question));if(!checked.length||checked.some(question=>question.lessonId!==lesson.id||question.origin!=='ai'||question.status!=='draft'))throw new Error('Soal AI tidak valid.');await db.transaction('rw',[db.lessons,db.questions],async()=>{const current=await db.lessons.get(lesson.id);if(JSON.stringify(current)!==JSON.stringify(lesson))throw new Error('Materi telah berubah. Buat ulang soal dari versi terbaru.');await db.questions.bulkAdd(checked);});}

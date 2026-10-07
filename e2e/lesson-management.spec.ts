@@ -17,5 +17,5 @@ test('PDF material, exact supplied font, edit persistence, and confirmed deletio
  await page.goto('/materi/tuhfah-nun');await expect(page.locator('h1')).toHaveText('Materi tidak ditemukan');
 });
 test('PDF quizzes can be scoped independently of original Tahsin materials',async({page})=>{
- await page.goto('/kuis');await page.getByRole('combobox',{name:'Subjek',exact:true}).selectOption('tuhfatul-athfal');await expect(page.getByText(/36 soal tersedia/)).toBeVisible();await page.getByRole('combobox',{name:'Jumlah soal',exact:true}).selectOption('20');await page.getByRole('button',{name:'Mulai kuis'}).click();await expect(page.getByText('SOAL 1 DARI 20')).toBeVisible();
+ await page.goto('/kuis');await page.getByRole('button',{name:'Siapkan kuis'}).click();await page.getByRole('combobox',{name:'Subjek',exact:true}).selectOption('tuhfatul-athfal');await expect(page.getByText(/36 soal tersedia/)).toBeVisible();await page.getByRole('combobox',{name:'Jumlah soal',exact:true}).selectOption('20');await page.getByRole('button',{name:'Mulai kuis'}).click();await expect(page.getByText('SOAL 1 DARI 20')).toBeVisible();
 });
