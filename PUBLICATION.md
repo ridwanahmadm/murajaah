@@ -48,3 +48,11 @@ Local device storage stays automatic. Google Drive snapshots are manual and acco
 Guides: public/panduan-cadangan.html and public/panduan-google-drive.html, available from Settings and the device-storage panel. Publisher OAuth Client ID is not yet available: the UI explicitly marks Google Drive inactive, with file export/import fully usable. Live account authorization remains unverified until publisher configuration is supplied; tests use a controlled Google SDK/API response and do not access real accounts.
 
 Validation: 69 unit tests, 30 local browser cases, 16 public-root and 16 GitHub-path browser cases passed, plus lint/typecheck, 24 contrast checks and both production builds. Two opt-in live AI cases were skipped. Drive tests cover private folder/scope, MIME upload, schema/size bounds, expiry, quota failure without retry, preview/cancel/restore, no credentials in JSON and offline guides.
+
+## JSON-only backup and note folders — 7 October 2026
+
+Google Drive backup UI is hidden and its SDK is never mounted, even with an old browser Client ID. Settings offers JSON export/import only. The public recovery guide reflects that choice; the inactive Drive setup guide lives under docs rather than public assets.
+
+Notes now have All Notes, Unfiled and named folders/subjects with counts, scoped search, creation, rename and note movement through the editor. Folder deletion requires confirmation and atomically moves its notes to Unfiled. Database version 3 preserves version-2 notes. JSON includes folders; legacy files without folders remain valid and invalid folder relationships cannot replace local data.
+
+Validation: 71 unit cases, 30 local browser cases, 16 public-root cases and 16 GitHub-path cases passed; two optional live AI cases skipped. Lint, typecheck, 24 contrast checks, Next webpack production build and both static builds passed. Folder checks cover refresh persistence, movement, rename, non-destructive deletion, export, accessibility and mobile reflow; unit tests verify legacy database upgrade and backup restore.

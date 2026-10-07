@@ -118,10 +118,8 @@ AI browser memakai WebLLM dan Qwen3.5 0.8B, 2B, atau 4B, tanpa API berbayar. Und
 
 Perubahan alamat memisahkan penyimpanan browser: ekspor cadangan JSON dari alamat lama lalu impor pada alamat Murajaah untuk memindahkan progres.
 
-## Cadangan perangkat dan Google Drive
+## Cadangan perangkat dan folder catatan
 
-Data belajar tetap otomatis tersimpan di IndexedDB. Pengaturan menyediakan ekspor/impor JSON dan panduan publik public/panduan-cadangan.html (termasuk Android/iPhone, file di Unduhan/Files, migrasi HP, dan keterbatasan pemulihan tanpa cadangan).
+Pengaturan hanya menyediakan ekspor/impor JSON dan panduan pemulihan `public/panduan-cadangan.html`. Cadangan Google Drive disembunyikan; komponen tidak dipasang dan SDK Google tidak dimuat. Implementasi yang belum diaktifkan tetap tersedia untuk pengembangan selanjutnya, dengan panduan pengelola di `docs/google-drive-setup-hidden.html`.
 
-Cadangan Google Drive bersifat opsional dan manual: SDK Google hanya dimuat setelah tindakan pengguna; OAuth scope drive.appdata hanya mengakses folder aplikasi milik akun yang pengguna pilih. Token berada di memori sesi, tidak di localStorage/IndexedDB/cadangan. Upload membuat snapshot baru tanpa menimpa/menghapus cadangan lama. Download maksimal 20 MB, validasi relasi/schema dan tinjauan, lalu konfirmasi impor atomik. Kuota/izin gagal tidak memicu retry atau fallback berbayar. Tidak ada sinkronisasi otomatis atau penggabungan data.
-
-Aktivasi: ikuti public/panduan-google-drive.html. Buat OAuth Web Client tanpa billing, atur origins persis kedua situs, audience/test users dan persyaratan publikasi Google. Terbitkan dengan NEXT_PUBLIC_GOOGLE_CLIENT_ID; GitHub Actions memakai repository variable GOOGLE_CLIENT_ID. Client ID publik bukan rahasia. Saat belum dikonfigurasi, UI menyatakan Drive belum aktif dan ekspor file tetap berfungsi. Pengelola bisa menguji Client ID pada browser sendiri lewat panel konfigurasi; pengguna umum memakai Client ID yang diterbitkan bersama situs.
+Catatan dapat dikelompokkan dalam folder/subjek, dibuat, diganti namanya, atau dipindahkan melalui pilihan folder ketika mengedit catatan. Menghapus folder memindahkan catatannya ke Tanpa folder setelah konfirmasi. Database versi 3 menambahkan indeks folder tanpa menghapus catatan versi sebelumnya. Cadangan JSON mencakup folder dan catatan; cadangan lama tanpa folder tetap dapat diimpor. Validasi referensi folder dan impor dilakukan atomik.

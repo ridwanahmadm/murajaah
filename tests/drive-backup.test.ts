@@ -2,7 +2,7 @@ import 'fake-indexeddb/auto';
 import {afterEach,beforeEach,describe,it,expect,vi} from 'vitest';
 import {acceptDriveToken,clearDriveSession,hasDriveSession,driveScope,listDriveBackups,uploadDriveBackup,downloadDriveBackup,maxBackupBytes} from '../lib/drive-backup';
 import type {Backup} from '../lib/backup';
-const backup:Backup={format:'murajaah',version:1,exportedAt:'2026-10-07T00:00:00.000Z',subjects:[],topics:[],lessons:[],questions:[],attempts:[],readings:[],notes:[],meta:[]};
+const backup:Backup={format:'murajaah',version:1,exportedAt:'2026-10-07T00:00:00.000Z',subjects:[],topics:[],lessons:[],questions:[],attempts:[],readings:[],notes:[],noteFolders:[],meta:[]};
 const file={id:'file_1',name:'murajaah.json',modifiedTime:'2026-10-07T00:00:00.000Z',size:'100'};
 beforeEach(()=>{clearDriveSession();acceptDriveToken({access_token:'user-owned-test-token',expires_in:3600,scope:driveScope});});
 afterEach(()=>{clearDriveSession();vi.unstubAllGlobals();vi.useRealTimers();});
