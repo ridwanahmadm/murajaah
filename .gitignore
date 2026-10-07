@@ -11,3 +11,6 @@ playwright-report/
 
 /dist-public/
 /public-site/
+
+/AGENTS.md
+/sources/

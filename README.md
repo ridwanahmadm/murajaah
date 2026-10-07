@@ -99,3 +99,11 @@ Data localhost tidak otomatis berpindah ke alamat publik: gunakan **Pengaturan â
 Checkout publik yang terpisah berada di `public-site/`, dengan identitas Sites di `public-site/.openai/hosting.json`. Gunakan kembali `project_id` yang tercatat di sana, jangan mendaftarkan situs pengganti. Build memperbarui checkout tersebut dari daftar folder sumber yang ditentukan; `.env.local`, `.local-ai`, `sources`, AGENTS.md, dan data browser tidak disalin. Publikasi memakai paket statis `public-site/dist/`, tanpa database server atau layanan AI cloud.
 
 Pemeriksaan versi publik: `PLAYWRIGHT_BROWSERS_PATH=/private/tmp/murajaah-browsers npx playwright test --config playwright.public.config.ts`.
+
+## GitHub Pages
+
+Repositori GitHub: https://github.com/ridwanahmadm/belajartahsin . Publikasi gratis menggunakan repositori publik dan workflow `.github/workflows/pages.yml`: push ke `main` menjalankan pemeriksaan, membangun versi statis, lalu menerbitkannya lewat GitHub Pages.
+
+Build GitHub menggunakan `PUBLIC_BASE_PATH=/belajartahsin/` agar file aplikasi, font, PDF, manifest pemasangan dan salinan offline berada di jalur repositori yang benar. `PUBLIC_SYNC_SITE=false` mencegah build tersebut mengubah checkout hosting Sites. Untuk deployment di root, jalankan build tanpa `PUBLIC_BASE_PATH`.
+
+Data pribadi browser tetap tidak diunggah ke GitHub. Penyimpanan pada GitHub Pages terpisah dari localhost dan Sites; gunakan cadangan JSON untuk memindahkan materi/progres.

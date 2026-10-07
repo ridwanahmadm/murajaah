@@ -2,7 +2,7 @@ import type {Subject, Topic, Lesson, Question} from './schema';
 
 export const contentKey='content:tuhfatul-athfal-v1';
 export const pdfDocument='tuhfatul-athfal' as const;
-export const pdfPath='/references/terjemah-tuhfatul-athfal.pdf';
+export const pdfPath=`${process.env.NEXT_PUBLIC_BASE_PATH??'/'}references/terjemah-tuhfatul-athfal.pdf`;
 const sourceTitle='Terjemah Tafsiriyyah Matan Tuhfatul Athfaal — Laili Al-Fadhli, Cetakan II, Mei 2017';
 export const pdfSubject:Subject={id:'tuhfatul-athfal',title:'Tuhfatul Athfal',description:'Pelajaran ringkas dari modul terjemah yang Anda lampirkan, beserta lampiran latihan tajwid.',reference:sourceTitle};
 type Entry={slug:string;title:string;page:number;locator:string;explanation:string;rules:[string,string][];examples?:Lesson['examples'];quiz:[string,string[],number,string][]};
